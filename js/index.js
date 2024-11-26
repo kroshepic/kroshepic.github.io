@@ -47,9 +47,10 @@ async function getRepositories(searchText) {
                                 createSearchResultItem(resItem.name, resItem.owner.login, resItem.stargazers_count);
 
                                 // Почистим поля после выбора
+                                if(searchUl) searchUl.remove();
                                 input.value = '';
                                 if (input.value.length === 0) {
-                                    searchUl.remove();
+                                    if(searchUl) searchUl.remove();
                                 }
                             }
                         });
