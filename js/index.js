@@ -1,5 +1,8 @@
-const resultBlock = document.querySelector('#result');
+const searchBlock = document.querySelector('.input-block'); // Блок с поиском
+const searchUl = createElement('ul', 'input-block_results');
 const input = document.querySelector('.input-block_input');
+const resultBlock = document.querySelector('#result'); // Блок с добавленными элементами
+
 
 // Fetch
 async function getRepositories(searchText) {
@@ -7,12 +10,10 @@ async function getRepositories(searchText) {
         const response = await fetch(`https://api.github.com/search/repositories?q=${searchText}:in:name`);
 
         if (response.ok) {
+
             // Вывод 5 первых результатов поиска
-            const searchBlock = document.querySelector('.input-block');
-            const searchUl = createElement('ul', 'input-block_results');
-
             const res = await response.json();
-
+            searchUl.innerHTML = ''; // Чистим перед добавлением
             res.items.forEach((repository, count = 0) => {
                 count++;
                 if (count <= 5) {
@@ -24,7 +25,7 @@ async function getRepositories(searchText) {
                 `);
                 }
             });
-            //searchBlock.removeChild(searchBlock.lastChild); // Чистка прошлого результата поиска
+
             searchBlock.append(searchUl);
 
             // Все 5 элементов результатов
@@ -44,13 +45,13 @@ async function getRepositories(searchText) {
                         // Создание выбранных элементов в блоке ниже:
                         res.items.forEach(resItem => {
                             if (resItem.id === Number(resultItem.id)) {
+
                                 createSearchResultItem(resItem.name, resItem.owner.login, resItem.stargazers_count);
 
                                 // Почистим поля после выбора
-                                if(searchUl) searchUl.remove();
                                 input.value = '';
                                 if (input.value.length === 0) {
-                                    if(searchUl) searchUl.remove();
+                                    searchUl.remove();
                                 }
                             }
                         });
