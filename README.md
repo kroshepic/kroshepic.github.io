@@ -1,1 +1,1 @@
-# [ссылка на хостинг](https://kroshepic.github.io/)
+# [ссылка на хостинг](https://kroshepic.github.io/index.html)
