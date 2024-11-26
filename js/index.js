@@ -45,6 +45,8 @@ async function getRepositories(searchText) {
                         res.items.forEach(resItem => {
                             if (resItem.id === Number(resultItem.id)) {
                                 createSearchResultItem(resItem.name, resItem.owner.login, resItem.stargazers_count);
+
+                                // Почистим поля после выбора
                                 input.value = '';
                                 if (input.value.length === 0) {
                                     searchUl.remove();
@@ -112,6 +114,8 @@ function createSearchResultItem (name, owner, stars) {
 
     return resultBlock.append(resItemBlock);
 }
+
+// Ф-я для задержки коллбека
 const debounce = (fn, debounceTime) => {
     let timer;
     function wrapper () {
@@ -123,6 +127,7 @@ const debounce = (fn, debounceTime) => {
     return wrapper;
 };
 
+// Main
 document.addEventListener('DOMContentLoaded',  () => {
     const debouncedGetRepositories = debounce(value => {
         getRepositories(value);
