@@ -134,7 +134,14 @@ const debounce = (fn, debounceTime) => {
 // Main
 document.addEventListener('DOMContentLoaded',  () => {
     const debouncedGetRepositories = debounce(value => {
-        getRepositories(value);
+        if (input.value.length > 0) {
+            getRepositories(value);
+        } else {
+            if (searchBlock.lastChild !== input) {
+                searchBlock.lastChild.remove();
+            }
+
+        }
     }, 1000);
 
 
