@@ -14,17 +14,19 @@ async function getRepositories(searchText) {
             // Вывод 5 первых результатов поиска
             const res = await response.json();
             searchUl.innerHTML = ''; // Чистим перед добавлением
-            res.items.forEach((repository, count = 0) => {
-                count++;
-                if (count <= 5) {
+            if (input.value.length > 0) {
+                res.items.forEach((repository, count = 0) => {
+                    count++;
+                    if (count <= 5) {
 
-                    searchUl.insertAdjacentHTML('beforeend', `
+                        searchUl.insertAdjacentHTML('beforeend', `
                     <li class="input-block_results-item" id="${repository.id}">
                         <p class="input-block_results-text">${repository.name}</p>
                     </li>
                 `);
-                }
-            });
+                    }
+                });
+            }
 
             searchBlock.append(searchUl);
 
