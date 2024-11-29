@@ -1,5 +1,9 @@
-REGISTRATION:
-![image](https://github.com/user-attachments/assets/676e5e8c-1ad0-4aec-89bd-e02aba6754ae)
+Registration:
+![image](https://github.com/user-attachments/assets/52543e47-e7fb-4473-901a-dda2a509d7c5)
 
+
+
+Authentication:
+![image](https://github.com/user-attachments/assets/a3528920-5ae8-45ae-819c-1166923a7105)
 
 
