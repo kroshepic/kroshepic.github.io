@@ -1,10 +1,10 @@
-Var for token:
-![image](https://github.com/user-attachments/assets/26d07f44-12bb-47e4-9da3-cd5f2c0d6078)
-
-
 Registration:
 ![image](https://github.com/user-attachments/assets/9878b169-a0a3-4da4-81c1-5a5f2941fbe1)
 ![image](https://github.com/user-attachments/assets/0d608c61-262e-4e7a-a065-8dbcbbce38e1)
+
+
+Var for token:
+![image](https://github.com/user-attachments/assets/26d07f44-12bb-47e4-9da3-cd5f2c0d6078)
 
 
 Authentication:
