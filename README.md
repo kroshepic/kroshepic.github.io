@@ -1,4 +1,4 @@
-# (https://kroshepic.github.io/)[Ссылка на хостинг]
+# (https://kroshepic.github.io/)
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
