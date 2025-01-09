@@ -18,7 +18,7 @@
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix --color",
     "format": "prettier --write src/**/*.js",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "eslintConfig": {
     "extends": [
@@ -61,11 +61,8 @@
   },
   "lint-staged": {
     "*.js": [
-      "echo 'Running lint'",
       "npm run lint",
-      "echo 'Running lint:fix'",
       "npm run lint:fix",
-      "echo 'Running format'",
       "npm run format",
       "git add"
     ]
