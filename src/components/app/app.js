@@ -2,20 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import './app.css';
+import { formatDistanceToNowStrict } from 'date-fns';
 
 import Header from '../header';
 import TaskList from '../task-list';
 import Footer from '../footer';
-import { formatDistanceToNowStrict } from 'date-fns';
 
-
-const message=    "Hello, world!"
-console.log(message);
-const longString = "This is a very long string that exceeds the maximum line length set by the linter, which is usually around 80 or 100 characters.This is a very long string that exceeds the maximum line length set by the linter, which is usually around 80 or 100 characters.This is a very long string that exceeds the maximum line length set by the linter, which is usually around 80 or 100 characters.";
-
+const message = 'Hello, world!';
 
 export default class App extends Component {
-
   state = {
     data: [],
   };
@@ -178,7 +173,6 @@ export default class App extends Component {
   };
 
   render() {
-
     return (
       <section className="todoapp">
         <Header addNewItem={this.addItem} />
@@ -201,5 +195,4 @@ export default class App extends Component {
       </section>
     );
   }
-
 }

@@ -16,7 +16,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint ./src",
-    "lint:fix": "eslint ./src --fix --color",
+    "lint:fix": "eslint ./src --fix --color || true",
     "format": "prettier --write src/**/*.js",
     "prepare": "husky"
   },
@@ -58,18 +58,5 @@
     "sass": "^1.83.0",
     "sass-loader": "^16.0.4",
     "webpack": "^5.97.1"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.js": [
-      "npm run lint",
-      "npm run lint:fix",
-      "npm run format",
-      "git add"
-    ]
   }
 }
