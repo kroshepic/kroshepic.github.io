@@ -59,6 +59,11 @@
     "sass-loader": "^16.0.4",
     "webpack": "^5.97.1"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "lint-staged": {
     "*.js": [
       "npm run lint",
