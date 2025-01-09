@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
-import './app.css';
 import { formatDistanceToNowStrict } from 'date-fns';
 
 import Header from '../header';
 import TaskList from '../task-list';
 import Footer from '../footer';
-
-const message = 'Hello, world!';
+import './app.css';
 
 export default class App extends Component {
   state = {
