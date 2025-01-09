@@ -8,6 +8,12 @@ import TaskList from '../task-list';
 import Footer from '../footer';
 import { formatDistanceToNowStrict } from 'date-fns';
 
+
+const message=    "Hello, world!"
+console.log(message);
+const longString = "This is a very long string that exceeds the maximum line length set by the linter, which is usually around 80 or 100 characters.This is a very long string that exceeds the maximum line length set by the linter, which is usually around 80 or 100 characters.This is a very long string that exceeds the maximum line length set by the linter, which is usually around 80 or 100 characters.";
+
+
 export default class App extends Component {
 
   state = {
