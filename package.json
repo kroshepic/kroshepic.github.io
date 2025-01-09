@@ -51,6 +51,8 @@
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.37.3",
     "eslint-plugin-react-hooks": "^5.1.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.3.0",
     "prettier": "^3.4.2",
     "prop-types": "^15.8.1",
     "sass": "^1.83.0",
@@ -59,13 +61,16 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "npx lint-staged"
     }
   },
   "lint-staged": {
     "*.js": [
+      "echo 'Running lint'",
       "npm run lint",
+      "echo 'Running lint:fix'",
       "npm run lint:fix",
+      "echo 'Running format'",
       "npm run format",
       "git add"
     ]

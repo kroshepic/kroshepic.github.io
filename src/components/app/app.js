@@ -9,6 +9,7 @@ import Footer from '../footer';
 import { formatDistanceToNowStrict } from 'date-fns';
 
 export default class App extends Component {
+
   state = {
     data: [],
   };
@@ -171,6 +172,7 @@ export default class App extends Component {
   };
 
   render() {
+
     return (
       <section className="todoapp">
         <Header addNewItem={this.addItem} />
@@ -193,4 +195,5 @@ export default class App extends Component {
       </section>
     );
   }
+
 }
