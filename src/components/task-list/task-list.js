@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Task from '../task';
 import './task-list.css';
 
-function TaskList({ todos, onTogglePropDone, onTogglePropEdit, onDeleted }) {
+function TaskList({ todos, onTogglePropDone, onTogglePropEdit, onDeleted, changeItemLabel }) {
   const elems = todos.map((item) => {
     const { id, ...res } = item;
 
@@ -21,6 +21,7 @@ function TaskList({ todos, onTogglePropDone, onTogglePropEdit, onDeleted }) {
         onDeleted={() => {
           onDeleted(id);
         }}
+        changeItemLabel={changeItemLabel}
       />
     );
   });

@@ -76,12 +76,27 @@ export default class App extends Component {
       };
     });
   };
+  changeItem = (e) => {
+    e.preventDefault();
+    const input = document.querySelector('ul.todo-list > li.editing > form.editing-form > input');
+    this.setState(({ data }) => {
+      const newArr = [...data];
+      newArr.forEach((item) => {
+        if (item.editing === true) {
+          item.description = input.value;
+          item.editing = false;
+        }
+      });
+      return {
+        data: newArr,
+      };
+    });
+  };
 
   onToggleProp = (arr, id, prop) => {
     const idx = arr.findIndex((el) => el.id === id);
     const oldItem = arr[idx];
     const newItem = { ...oldItem, [prop]: !oldItem[prop] };
-
     return [...arr.slice(0, idx), newItem, ...arr.slice(idx + 1)];
   };
 
@@ -180,6 +195,7 @@ export default class App extends Component {
             onTogglePropDone={this.onTogglePropDone}
             onTogglePropEdit={this.onTogglePropEdit}
             onDeleted={this.deleteItem}
+            changeItemLabel={this.changeItem}
           />
         </section>
         <Footer

@@ -4,6 +4,10 @@ import PropTypes from 'prop-types';
 import './task.css';
 
 export default class Task extends Component {
+  state = {
+    label: this.props.description,
+  };
+
   static defaultProps = {
     timeAgo: '0 seconds',
     done: false,
@@ -20,14 +24,29 @@ export default class Task extends Component {
     onTogglePropEdit: PropTypes.func,
     onDeleted: PropTypes.func,
     timeAgo: (props, propName, componentName) => {
-      /* Для реализации без PropTypes */
       if (typeof props[propName] === 'string') return null;
       return TypeError(`${componentName}: ${propName} must be string`);
     },
   };
 
+  handleChange = (event) => {
+    this.setState({
+      label: event.target.value,
+    });
+  };
+
   render() {
-    const { description, done, editing, hidden, onTogglePropDone, onTogglePropEdit, onDeleted, timeAgo } = this.props;
+    const {
+      description,
+      done,
+      editing,
+      hidden,
+      onTogglePropDone,
+      onTogglePropEdit,
+      onDeleted,
+      timeAgo,
+      changeItemLabel,
+    } = this.props;
 
     let className = '';
 
@@ -46,7 +65,11 @@ export default class Task extends Component {
           <button className="icon icon-edit" onClick={onTogglePropEdit}></button>
           <button className="icon icon-destroy" onClick={onDeleted}></button>
         </div>
-        {className === 'editing' && <input type="text" className="edit" value={description} />}
+        {className === 'editing' && (
+          <form onSubmit={changeItemLabel} className="editing-form">
+            <input type="text" className="edit" value={this.state.label} onChange={this.handleChange} />
+          </form>
+        )}
       </li>
     );
   }
