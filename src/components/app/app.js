@@ -36,7 +36,7 @@ export default class App extends Component {
             unit: 'second',
           }),
         }));
-        //console.log(typeof(resData[0]['timeAgo']))
+        // console.log(typeof(resData[0]['timeAgo']))
         return { data: resData };
       });
     }, 5000);
@@ -76,6 +76,7 @@ export default class App extends Component {
       };
     });
   };
+
   changeItem = (e) => {
     e.preventDefault();
     const input = document.querySelector('ul.todo-list > li.editing > form.editing-form > input');
@@ -157,6 +158,7 @@ export default class App extends Component {
       };
     });
   };
+
   onSortComplited = () => {
     this.onSortAll();
     this.addSelectedClass(2);
