@@ -5,9 +5,16 @@ import { formatDistanceToNowStrict } from 'date-fns';
 import Header from '../header';
 import TaskList from '../task-list';
 import Footer from '../footer';
+
 import './app.css';
 
 export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.taskTimers = new Map();
+    this.checkActiveTimerItem();
+  }
+
   state = {
     data: [],
   };
@@ -27,7 +34,49 @@ export default class App extends Component {
     onClearAllComplited: PropTypes.func,
   };
 
+  saveToLocalStorage = () => {
+    if (this.saveTimeout) clearTimeout(this.saveTimeout);
+    this.saveTimeout = setTimeout(() => {
+      localStorage.setItem('tasks', JSON.stringify(this.state.data));
+    }, 1000);
+  };
+
+  syncStateWithLocalStorage = () => {
+    try {
+      const storedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      this.setState({
+        data: storedTasks,
+      });
+      this.saveToLocalStorage();
+    } catch (error) {
+      console.error('Failed to parse tasks from localStorage. Clearing corrupted data.', error);
+      localStorage.removeItem('tasks'); // Очистка некорректных данных
+      this.setState({
+        data: [],
+      });
+    }
+  };
+
+  handleStorageChange = (event) => {
+    if (event.key === 'tasks') {
+      const updatedData = JSON.parse(event.newValue);
+      this.setState({
+        data: updatedData,
+      });
+      this.saveToLocalStorage();
+    }
+  };
+
+  handleVisibilityChange = () => {
+    if (document.visibilityState === 'hidden') {
+      this.saveToLocalStorage();
+    }
+  };
+
   componentDidMount = () => {
+    this.syncStateWithLocalStorage();
+    this.checkActiveTimerItem();
+
     this.intervalId = setInterval(() => {
       this.setState((prevState) => {
         const resData = prevState.data.map((task) => ({
@@ -36,24 +85,62 @@ export default class App extends Component {
             unit: 'second',
           }),
         }));
-        // console.log(typeof(resData[0]['timeAgo']))
+        this.saveToLocalStorage();
         return { data: resData };
       });
-    }, 5000);
+    }, 1000);
+
+    window.addEventListener('beforeunload', this.saveToLocalStorage);
+    window.addEventListener('storage', this.handleStorageChange);
+    window.addEventListener('visibilitychange', this.handleVisibilityChange);
   };
 
   componentWillUnmount = () => {
     clearInterval(this.intervalId);
+    this.taskTimers.forEach((intervalId) => clearInterval(intervalId));
+    window.removeEventListener('beforeunload', this.saveToLocalStorage);
+    window.removeEventListener('storage', this.handleStorageChange);
+    window.removeEventListener('visibilitychange', this.handleVisibilityChange);
   };
 
-  deleteItem = (id) => {
-    this.setState(() => {
-      const arr = this.state.data;
-      const idx = arr.findIndex((item) => item.id === id);
-      return {
-        data: [...arr.slice(0, idx), ...arr.slice(idx + 1)],
-      };
+  checkActiveTimerItem = () => {
+    const arr = this.state.data;
+    arr.forEach((item) => {
+      if (item.active_timer) {
+        this.startTimer(item.id);
+      }
     });
+  };
+
+  startTimer = (id) => {
+    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    const updatedTasks = tasks.map((task) => (task.id === id ? { ...task, active_timer: true } : task));
+    localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+
+    if (this.taskTimers.has(id)) return;
+
+    const intervalId = setInterval(() => {
+      this.setState((prevState) => {
+        const data = prevState.data.map((task) =>
+          task.id === id ? { ...task, active_timer: true, timer: task.timer + 1 } : task
+        );
+        localStorage.setItem('tasks', JSON.stringify(data));
+        return { data };
+      });
+    }, 1000);
+    this.taskTimers.set(id, intervalId);
+  };
+
+  pauseTimer = (id) => {
+    this.setState((prevState) => {
+      const data = prevState.data.map((task) => (task.id === id ? { ...task, active_timer: false } : task));
+      this.saveToLocalStorage();
+      return { data };
+    });
+    if (this.taskTimers.has(id)) {
+      clearInterval(this.taskTimers.get(id));
+      this.taskTimers.delete(id);
+    }
   };
 
   createItem(description) {
@@ -64,8 +151,25 @@ export default class App extends Component {
       done: false,
       editing: false,
       hidden: false,
+      timer: 0,
+      active_timer: false,
     };
   }
+
+  deleteItem = (id) => {
+    if (this.taskTimers.has(id)) {
+      clearInterval(this.taskTimers.get(id));
+      this.taskTimers.delete(id);
+    }
+    this.setState(() => {
+      const arr = this.state.data;
+      const idx = arr.findIndex((item) => item.id === id);
+      return {
+        data: [...arr.slice(0, idx), ...arr.slice(idx + 1)],
+      };
+    });
+    this.saveToLocalStorage();
+  };
 
   addItem = (value) => {
     this.setState(({ data }) => {
@@ -75,6 +179,7 @@ export default class App extends Component {
         data: resArr,
       };
     });
+    this.saveToLocalStorage();
   };
 
   changeItem = (e) => {
@@ -88,6 +193,7 @@ export default class App extends Component {
           item.editing = false;
         }
       });
+      this.saveToLocalStorage();
       return {
         data: newArr,
       };
@@ -107,6 +213,8 @@ export default class App extends Component {
         data: this.onToggleProp(data, id, 'done'),
       };
     });
+    clearInterval(this.taskTimers.get(id));
+    this.saveToLocalStorage();
   };
 
   onTogglePropEdit = (id) => {
@@ -115,6 +223,7 @@ export default class App extends Component {
         data: this.onToggleProp(data, id, 'editing'),
       };
     });
+    this.saveToLocalStorage();
   };
 
   addSelectedClass = (num) => {
@@ -139,6 +248,7 @@ export default class App extends Component {
         data: resArr,
       };
     });
+    this.saveToLocalStorage();
   };
 
   onSortActive = () => {
@@ -157,6 +267,7 @@ export default class App extends Component {
         data: resArr,
       };
     });
+    this.saveToLocalStorage();
   };
 
   onSortComplited = () => {
@@ -170,11 +281,11 @@ export default class App extends Component {
           item.hidden = true;
         }
       });
-
       return {
         data: resArr,
       };
     });
+    this.saveToLocalStorage();
   };
 
   onClearAllComplited = () => {
@@ -184,6 +295,7 @@ export default class App extends Component {
         data: resArr,
       };
     });
+    this.saveToLocalStorage();
   };
 
   render() {
@@ -198,6 +310,8 @@ export default class App extends Component {
             onTogglePropEdit={this.onTogglePropEdit}
             onDeleted={this.deleteItem}
             changeItemLabel={this.changeItem}
+            startTimer={this.startTimer}
+            pauseTimer={this.pauseTimer}
           />
         </section>
         <Footer

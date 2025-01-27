@@ -46,6 +46,9 @@ export default class Task extends Component {
       onDeleted,
       timeAgo,
       changeItemLabel,
+      timer,
+      startTimer,
+      pauseTimer,
     } = this.props;
 
     let className = '';
@@ -59,8 +62,13 @@ export default class Task extends Component {
         <div className="view">
           <input className="toggle" type="checkbox" onClick={onTogglePropDone} />
           <label>
-            <span className="description">{description}</span>
-            <span className="created">created {timeAgo} ago</span>
+            <span className="title">{description}</span>
+            <span className="description">
+              <button className="icon icon-play" onClick={startTimer}></button>
+              <button className="icon icon-pause" onClick={pauseTimer}></button>
+              {timer}
+            </span>
+            <span className="description">created {timeAgo} ago</span>
           </label>
           <button className="icon icon-edit" onClick={onTogglePropEdit}></button>
           <button className="icon icon-destroy" onClick={onDeleted}></button>

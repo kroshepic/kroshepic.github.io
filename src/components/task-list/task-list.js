@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Task from '../task';
 import './task-list.css';
 
-function TaskList({ todos, onTogglePropDone, onTogglePropEdit, onDeleted, changeItemLabel }) {
+function TaskList({ todos, onTogglePropDone, onTogglePropEdit, onDeleted, changeItemLabel, startTimer, pauseTimer }) {
   const elems = todos.map((item) => {
     const { id, ...res } = item;
 
@@ -22,6 +22,12 @@ function TaskList({ todos, onTogglePropDone, onTogglePropEdit, onDeleted, change
           onDeleted(id);
         }}
         changeItemLabel={changeItemLabel}
+        startTimer={() => {
+          startTimer(id);
+        }}
+        pauseTimer={() => {
+          pauseTimer(id);
+        }}
       />
     );
   });
