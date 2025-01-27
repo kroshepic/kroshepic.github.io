@@ -33,7 +33,7 @@
     "import/no-unresolved": [2, { "caseSensitive": false }],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "comma-dangle": ["error", "always-multiline"],
-    "space-before-function-paren": ["error", "always"],
+    "space-before-function-paren": ["off"],
     "import/order": [
       2,
       {
