@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+body {
+  background-color: #F7F7F7;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #000;
+}
+.loading-spin {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+.error-dino-pic {
+  margin-top: 100px;
+  margin-bottom: 20px;
+  width: 100px;
+  position: relative;
+  left: calc(50% - 50px);;
+}
+.error-dino-text {
+  position: relative;
+  text-align: center;
+  width: 200px;
+  left: calc(50% - 100px);;
+}
+.pagination {
+  margin-top: 30px;
+}
+.null-response-text {
+  max-width: 1010px;
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+}
