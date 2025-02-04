@@ -44,7 +44,7 @@ export default [
             semi: ['warn', 'always'],
             'react/react-in-jsx-scope': 'off',
             'react/prop-types': 0,
-            'comma-dangle': ['error', 'always-multiline'],
+            'comma-dangle': ['off'],
             'space-before-function-paren': ['off'],
         },
     },

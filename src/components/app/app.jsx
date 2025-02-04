@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import FilmsResources from '../../services/films-resources';
+import FilmsGenres from '../../services/films-genres';
 import TabsList from '../tabs';
 import Search from '../search';
 import MoviesList from '../movies-list';
+import GenresList from '../genres-list';
+import { FilmsResourcesProvider } from '../films-resources-context';
+import { FilmsGenresProvider } from '../films-genres-context/index.js';
 import { Alert, Spin, Pagination } from 'antd';
 import { Online, Offline } from 'react-detect-offline';
 import err500Dino from './err500.svg';
@@ -11,9 +15,13 @@ import './app.scss';
 export default class App extends Component {
     state = {
         films: [],
+        genres: [],
+        genresLoading: true,
         loading: null,
         error: false,
         searchValue: '',
+        totalPages: null,
+        pageNum: 1,
         activeTab: 'tab1',
     };
 
@@ -21,12 +29,16 @@ export default class App extends Component {
         this.setState({ loading: true, error: false });
 
         try {
-            const data = await FilmsResources(this.state.searchValue);
+            const { results, totalPages } = await FilmsResources(
+                this.state.searchValue,
+                this.state.pageNum
+            );
 
             this.setState({
-                films: data,
+                films: results,
                 loading: false,
-                error: data.length === 0,
+                totalPages,
+                error: results.length === 0,
             });
         } catch (error) {
             this.setState({
@@ -34,25 +46,6 @@ export default class App extends Component {
                 error: true,
             });
         }
-    };
-
-    resultRenderFunc = (loading, error) => {
-        if (loading === null)
-            return <p className={'null-response-text'}>Введите запрос...</p>;
-        return loading ? (
-            <Spin className='loading-spin' />
-        ) : !error ? (
-            /*<MoviesList films={this.putRateProp(this.state.films)} />*/
-            <MoviesList films={this.state.films} />
-        ) : (
-            <Alert
-                style={{ textAlign: 'center', marginTop: 20 }}
-                message='Ошибка 404!'
-                description='Данные по вашему запросу отсутствуют...'
-                type='error'
-                closable
-            />
-        );
     };
 
     handleTabChange = () => {
@@ -65,10 +58,19 @@ export default class App extends Component {
         });
     };
 
+    async componentDidMount() {
+        try {
+            const genres = await FilmsGenres();
+            this.setState({ genres, genresLoading: false });
+        } catch (e) {
+            console.error('Ошибка при получении данных о жанрах...');
+        }
+    }
+
     render() {
-        const { loading, error } = this.state;
+        const { loading, genres, genresLoading, error } = this.state;
         return (
-            <React.Fragment>
+            <>
                 <Online>
                     <TabsList
                         className={'tabs'}
@@ -84,7 +86,48 @@ export default class App extends Component {
                                 }
                                 onSubmit={this.onSearchSubmit}
                             />
-                            {this.resultRenderFunc(loading, error)}
+                            {loading === null && this.state.genresLoading ? (
+                                <Spin className='loading-spin' />
+                            ) : loading === null ? (
+                                <FilmsGenresProvider
+                                    value={{ genres: this.state.genres }}
+                                >
+                                    <GenresList genres={this.state.genres} />
+                                </FilmsGenresProvider>
+                            ) : loading ? (
+                                <Spin className='loading-spin' />
+                            ) : !error ? (
+                                <FilmsResourcesProvider
+                                    value={{ films: this.state.films }}
+                                >
+                                    <MoviesList />
+                                </FilmsResourcesProvider>
+                            ) : (
+                                <Alert
+                                    style={{
+                                        textAlign: 'center',
+                                        marginTop: 20,
+                                    }}
+                                    message='Ошибка 404!'
+                                    description='Данные по вашему запросу отсутствуют...'
+                                    type='error'
+                                    closable
+                                />
+                            )}
+                            {this.state.totalPages && (
+                                <Pagination
+                                    className={'pagination'}
+                                    align='center'
+                                    current={this.state.pageNum}
+                                    total={this.state.totalPages * 20}
+                                    pageSize={20}
+                                    onChange={(page) =>
+                                        this.setState({ pageNum: page }, () => {
+                                            this.onSearchSubmit();
+                                        })
+                                    }
+                                />
+                            )}
                         </>
                     )}
                     {this.state.activeTab === 'tab2' && (
@@ -94,12 +137,6 @@ export default class App extends Component {
                             }
                         />
                     )}
-                    <Pagination
-                        className={'pagination'}
-                        align='center'
-                        defaultCurrent={1}
-                        total={4}
-                    />
                 </Online>
                 <Offline>
                     <img
@@ -114,7 +151,7 @@ export default class App extends Component {
                         description='Проблемы с сервером. Повторите попытку позже...'
                     />
                 </Offline>
-            </React.Fragment>
+            </>
         );
     }
 }

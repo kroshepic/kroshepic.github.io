@@ -8,7 +8,7 @@ import emptyPicture from './empty-cam.svg';
 export default class Movie extends Component {
     state = {
         rating: this.props.rating ?? 0,
-	};
+    };
 
     changePreview = (str, max, ellipsis) => {
         if (str.length <= max) return str;
@@ -16,8 +16,8 @@ export default class Movie extends Component {
         if (str[max] !== ' ') {
             trimmed = trimmed.substr(
                 0,
-                Math.min(trimmed.length, trimmed.lastIndexOf(' ')),
-			);
+                Math.min(trimmed.length, trimmed.lastIndexOf(' '))
+            );
         }
         return trimmed + ellipsis + '...';
     };
@@ -55,7 +55,7 @@ export default class Movie extends Component {
         this.setState(
             {
                 rating: value,
-			},
+            },
             () => {
                 let item = this.props;
                 let allItems = [];
@@ -68,7 +68,7 @@ export default class Movie extends Component {
                     allItems[currentId] = {
                         ...item,
                         rating: this.state.rating,
-					};
+                    };
                 } else {
                     const newItem = { ...item, rating: this.state.rating };
                     allItems.push(newItem);
@@ -95,7 +95,7 @@ export default class Movie extends Component {
             poster_path,
             overview,
             release_date,
-            vote_average
+            vote_average,
         } = this.props;
 
         const normalizedRating = Number(vote_average).toFixed(1);
@@ -103,13 +103,13 @@ export default class Movie extends Component {
         let normalizedRatingClass = '';
         normalizedRating <= 3
             ? (normalizedRatingClass = 'movies-item__rate-num--before-three')
-			: normalizedRating <= 5
-				? (normalizedRatingClass = 'movies-item__rate-num--before-five')
-				: normalizedRating <= 7
-					? (normalizedRatingClass =
-							'movies-item__rate-num--before-seven')
-                    : (normalizedRatingClass =
-							'movies-item__rate-num--after-seven');
+            : normalizedRating <= 5
+              ? (normalizedRatingClass = 'movies-item__rate-num--before-five')
+              : normalizedRating <= 7
+                ? (normalizedRatingClass =
+                      'movies-item__rate-num--before-seven')
+                : (normalizedRatingClass =
+                      'movies-item__rate-num--after-seven');
 
         return (
             <Flex className='movies-item' gap={19}>

@@ -29,7 +29,7 @@ export default class Search extends Component {
                 <Input
                     className={'search__input'}
                     type={'text'}
-                    placeholder={'Type to search...'}
+                    placeholder={'Пожалуйста, введите запрос...'}
                     value={this.props.value}
                     onChange={this.onLabelChange}
                 />
