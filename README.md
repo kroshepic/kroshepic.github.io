@@ -1,2 +1,4 @@
-# Inspect: https://vercel.com/kroshepics-projects-9a7b125d/kroshepic-github-io/AurBjj2tkMcCBbjMjjsA857jGoGx 
-# Production: https://kroshepic-github-1wngm3o7f-kroshepics-projects-9a7b125d.vercel.app 
+# https://kroshepic-github-io.vercel.app/
+
+1. Оставил функционал с сохранением в localStorage всех данных с синхронизацией таймеров
+2. Если не видно таймера или инпута с min sec - лучше открыть в режиме инкогнито 
