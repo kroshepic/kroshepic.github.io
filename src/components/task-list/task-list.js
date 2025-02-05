@@ -28,6 +28,8 @@ function TaskList({ todos, onTogglePropDone, onTogglePropEdit, onDeleted, change
         pauseTimer={() => {
           pauseTimer(id);
         }}
+        minutes={item.timer ? Math.floor(item.timer / 60) : 0}
+        seconds={item.timer ? item.timer % 60 : 0}
       />
     );
   });

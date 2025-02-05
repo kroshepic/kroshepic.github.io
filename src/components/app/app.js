@@ -112,6 +112,15 @@ export default class App extends Component {
     });
   };
 
+  setTaskTimer = (id, minutes, seconds) => {
+    this.setState((prevState) => {
+      const updatedTasks = prevState.data.map((task) =>
+        task.id === id ? { ...task, minutes, seconds, timer: minutes * 60 + seconds } : task
+      );
+      return { data: updatedTasks };
+    });
+  };
+
   startTimer = (id) => {
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     const updatedTasks = tasks.map((task) => (task.id === id ? { ...task, active_timer: true } : task));
@@ -121,9 +130,17 @@ export default class App extends Component {
 
     const intervalId = setInterval(() => {
       this.setState((prevState) => {
-        const data = prevState.data.map((task) =>
-          task.id === id ? { ...task, active_timer: true, timer: task.timer + 1 } : task
-        );
+        const data = prevState.data.map((task) => {
+          if (task.id === id) {
+            if (task.timer === 0 && !task.alertShown) {
+              alert('Время задачи вышло...');
+              task.alertShown = true;
+            }
+            return { ...task, active_timer: true, timer: Math.max(task.timer - 1, 0) };
+          }
+          return task;
+        });
+
         localStorage.setItem('tasks', JSON.stringify(data));
         return { data };
       });
@@ -143,7 +160,7 @@ export default class App extends Component {
     }
   };
 
-  createItem(description) {
+  createItem(description, timer) {
     return {
       id: Math.random(),
       description,
@@ -151,7 +168,7 @@ export default class App extends Component {
       done: false,
       editing: false,
       hidden: false,
-      timer: 0,
+      timer,
       active_timer: false,
     };
   }
@@ -161,25 +178,33 @@ export default class App extends Component {
       clearInterval(this.taskTimers.get(id));
       this.taskTimers.delete(id);
     }
-    this.setState(() => {
-      const arr = this.state.data;
-      const idx = arr.findIndex((item) => item.id === id);
-      return {
-        data: [...arr.slice(0, idx), ...arr.slice(idx + 1)],
-      };
-    });
-    this.saveToLocalStorage();
+    this.setState(
+      () => {
+        const arr = this.state.data;
+        const idx = arr.findIndex((item) => item.id === id);
+        return {
+          data: [...arr.slice(0, idx), ...arr.slice(idx + 1)],
+        };
+      },
+      () => {
+        this.saveToLocalStorage();
+      }
+    );
   };
 
-  addItem = (value) => {
-    this.setState(({ data }) => {
-      const newItem = this.createItem(value);
-      const resArr = [...data, newItem];
-      return {
-        data: resArr,
-      };
-    });
-    this.saveToLocalStorage();
+  addItem = (value, timer) => {
+    this.setState(
+      ({ data }) => {
+        const newItem = this.createItem(value, timer);
+        const resArr = [...data, newItem];
+        return {
+          data: resArr,
+        };
+      },
+      () => {
+        this.saveToLocalStorage();
+      }
+    );
   };
 
   changeItem = (e) => {
@@ -301,7 +326,7 @@ export default class App extends Component {
   render() {
     return (
       <section className="todoapp">
-        <Header addNewItem={this.addItem} />
+        <Header addNewItem={this.addItem} setTaskTimer={this.setTaskTimer} />
 
         <section className="main">
           <TaskList

@@ -46,9 +46,10 @@ export default class Task extends Component {
       onDeleted,
       timeAgo,
       changeItemLabel,
-      timer,
       startTimer,
       pauseTimer,
+      minutes,
+      seconds,
     } = this.props;
 
     let className = '';
@@ -66,7 +67,7 @@ export default class Task extends Component {
             <span className="description">
               <button className="icon icon-play" onClick={startTimer}></button>
               <button className="icon icon-pause" onClick={pauseTimer}></button>
-              {timer}
+              {minutes}:{seconds}
             </span>
             <span className="description">created {timeAgo} ago</span>
           </label>
