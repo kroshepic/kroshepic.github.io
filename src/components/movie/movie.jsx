@@ -74,7 +74,14 @@ export default class Movie extends Component {
                     allItems.push(newItem);
                 }
 
-                localStorage.setItem('rated', JSON.stringify(allItems));
+                const ratedArr = [];
+                allItems.forEach((item) => {
+                    if (item.rating > 0) {
+                        ratedArr.push(item);
+                    }
+                });
+
+                localStorage.setItem('rated', JSON.stringify(ratedArr));
 
                 this.forceUpdate();
             }
